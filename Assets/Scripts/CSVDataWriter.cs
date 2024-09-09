@@ -55,10 +55,17 @@ public class CSVDataWriter : MonoBehaviour
 
     private void UpdateRow(List<string[]> data, int rowIndex, string category, float value)
     {
-        int columnIndex = FindColumnIndexByCategory(category);  // 根据类别查找对应列
+        int columnIndex = FindColumnIndexByCategory(category);  // Find the column index by category
         if (columnIndex != -1)
         {
-            data[rowIndex][columnIndex] = (float.Parse(data[rowIndex][columnIndex]) + value).ToString();
+            if (!string.IsNullOrEmpty(data[rowIndex][columnIndex]))
+            {
+                data[rowIndex][columnIndex] = (float.Parse(data[rowIndex][columnIndex]) + value).ToString();
+            }
+            else
+            {
+                data[rowIndex][columnIndex] = value.ToString();
+            }
         }
     }
 
