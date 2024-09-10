@@ -20,7 +20,18 @@ public class CSVDataWriter : MonoBehaviour
 
     public List<string[]> ReadCSV(string csvPath)
     {
-        var lines = File.ReadAllLines(csvPath);
+        //判断一下文件不存在就空
+        string[] lines = File.Exists(csvPath) ? File.ReadAllLines(csvPath) : Array.Empty<string>();
+
+        string s = "";
+        foreach (string l in lines)
+        {
+            s += l + "\n";
+        }
+        Debug.Log("ReadCSV_______________");
+        Debug.Log(s);
+        Debug.Log("CSVRead_________________");
+        
         return lines.Select(line => line.Split(',')).ToList();
     }
 
@@ -28,6 +39,8 @@ public class CSVDataWriter : MonoBehaviour
     {
         for (int i = 0; i < data.Count; i++)
         {
+            //如果一行没东西，跳过
+            if (data[i].Length <= 0) continue;
             if (data[i][0] == date)
             {
                 return i;  // 返回日期对应的行号
@@ -63,13 +76,22 @@ public class CSVDataWriter : MonoBehaviour
         int columnIndex = FindColumnIndexByCategory(category);  // Find the column index by category
         if (columnIndex != -1)
         {
-            if (!string.IsNullOrEmpty(data[rowIndex][columnIndex]))
+            //这里col row搞反了
+            // if (!string.IsNullOrEmpty(data[rowIndex][columnIndex]))
+            // {
+            //     data[rowIndex][columnIndex] = data[rowIndex][columnIndex] + "; " + desc;
+            // }
+            // else
+            // {
+            //     data[rowIndex][columnIndex] = desc;
+            // }
+            if (!string.IsNullOrEmpty(data[columnIndex][rowIndex]))
             {
-                data[rowIndex][columnIndex] = data[rowIndex][columnIndex] + "; " + desc;
+                data[columnIndex][rowIndex] = data[columnIndex][rowIndex] + "; " + desc;
             }
             else
             {
-                data[rowIndex][columnIndex] = desc;
+                data[columnIndex][rowIndex] = desc;
             }
         }
     }
@@ -134,7 +156,8 @@ public class CSVDataWriter : MonoBehaviour
     public void OnAddButtonClicked()
     {
         string selectedCategory = subcategorySelection.GetSelectedSubcategory();  // 获取选择的子类别
-        float timeCost = float.Parse(dataInput.timeCostInputField.text);  // 获取输入的时间
+        float timeCost = 0;
+        float.TryParse(dataInput.timeCostInputField.text, out timeCost);  // 获取输入的时间，用tryParse可以避免parse非float的string报错
         string date = DateTime.Now.ToString("MM/dd/yyyy");  // 当前日期
 
         UpdateOrAddData(date, selectedCategory, timeCost);  // 更新或添加数据

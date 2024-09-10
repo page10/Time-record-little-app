@@ -15,6 +15,7 @@ public class SubcategorySelection : MonoBehaviour
         foreach (Toggle toggle in toggles)
         {
             toggle.onValueChanged.AddListener(delegate { OnToggleChanged(toggle); });
+            if (string.IsNullOrEmpty(selectedSubcategory)) toggle.isOn = true;  //自动选中
         }
     }
 
