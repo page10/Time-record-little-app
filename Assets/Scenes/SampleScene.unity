@@ -2178,6 +2178,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 539542724}
+        m_TargetAssemblyTypeName: JsonWriter, Assembly-CSharp
+        m_MethodName: OnAddButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &521719087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2228,6 +2240,7 @@ GameObject:
   - component: {fileID: 539542720}
   - component: {fileID: 539542723}
   - component: {fileID: 539542722}
+  - component: {fileID: 539542724}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -2309,6 +2322,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   descriptionInputField: {fileID: 1501621103}
   timeCostInputField: {fileID: 805371724}
+--- !u!114 &539542724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539542719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285cbe0d423b07040a205be9bd10cf84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataInput: {fileID: 539542723}
+  subcategorySelection: {fileID: 539542720}
 --- !u!1 &544840259
 GameObject:
   m_ObjectHideFlags: 0

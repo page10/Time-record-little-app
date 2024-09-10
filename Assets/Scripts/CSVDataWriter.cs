@@ -58,12 +58,12 @@ public class CSVDataWriter : MonoBehaviour
         if (rowIndex != -1)
         {
             UpdateRow(data, rowIndex, category, value);
-            UpdateDescRow(dataWithDesc, rowIndex, category, dataInput.GetDescription());
+            //UpdateDescRow(dataWithDesc, rowIndex, category, dataInput.GetDescription());  todo 这里总是报数组越界
         }
         else
         {
             AddNewRow(data, date, category, value);
-            AddDescRow(dataWithDesc, date, category, dataInput.GetDescription());
+            //AddDescRow(dataWithDesc, date, category, dataInput.GetDescription());
         }
 
         // 将数据重新写回 CSV 文件
