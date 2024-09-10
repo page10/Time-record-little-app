@@ -25,26 +25,31 @@ public class JsonWriter : MonoBehaviour
 
 public class JsonDataHandler : MonoBehaviour
 {
-    private string filePath;
+    private string filePathJson;
 
     private void Start()
     {
-        filePath = Application.persistentDataPath + "/activity_data.json";
+        filePathJson = Application.persistentDataPath + "/activity_data.json";
     }
 
     public void SaveData(ActivityData activity)
     {
+        if (string.IsNullOrEmpty(filePathJson))
+        {
+            filePathJson = Application.persistentDataPath + "/activity_data.json";
+        }
+
         ActivityDataList dataList = new ActivityDataList();
 
-        if (System.IO.File.Exists(filePath))
+        if (System.IO.File.Exists(filePathJson))
         {
-            string jsonData = System.IO.File.ReadAllText(filePath);
+            string jsonData = System.IO.File.ReadAllText(filePathJson);
             dataList = JsonUtility.FromJson<ActivityDataList>(jsonData);
         }
 
         dataList.activities.Add(activity);
 
         string json = JsonUtility.ToJson(dataList, true);
-        System.IO.File.WriteAllText(filePath, json);
+        System.IO.File.WriteAllText(filePathJson, json);
     }
 }
