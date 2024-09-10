@@ -23,14 +23,14 @@ public class CSVDataWriter : MonoBehaviour
         //判断一下文件不存在就空
         string[] lines = File.Exists(csvPath) ? File.ReadAllLines(csvPath) : Array.Empty<string>();
 
-        string s = "";
-        foreach (string l in lines)
-        {
-            s += l + "\n";
-        }
-        Debug.Log("ReadCSV_______________");
-        Debug.Log(s);
-        Debug.Log("CSVRead_________________");
+        // string s = "";
+        // foreach (string l in lines)
+        // {
+        //     s += l + "\n";
+        // }
+        // Debug.Log("ReadCSV_______________");
+        // Debug.Log(s);
+        // Debug.Log("CSVRead_________________");
         
         return lines.Select(line => line.Split(',')).ToList();
     }

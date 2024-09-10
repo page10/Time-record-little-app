@@ -10,55 +10,76 @@ public class JsonWriter : MonoBehaviour
     public DataInput dataInput;
     public SubcategorySelection subcategorySelection;
     
-    ActivityData newActivity = new ActivityData();
-    JsonDataHandler jsonHandler;
-
+    
+    //JsonDataHandler jsonHandler;
+    private string _jsonPath;
+    
     private void Awake()
     {
-        jsonHandler = new JsonDataHandler(Application.persistentDataPath + "/activity_data.json");
+        _jsonPath = Application.persistentDataPath + "/activity_data.json";
+        //jsonHandler = new JsonDataHandler(Application.persistentDataPath + "/activity_data.json");
     }
 
     public void OnAddButtonClicked()
     {
-        if (jsonHandler == null)
+        if (string.IsNullOrEmpty(_jsonPath))
         {
-            Debug.LogError("Json Handler has not been constructed");
+            Debug.LogError("Json path is not set");
             return;
         }
-        newActivity.date = DateTime.Now.ToString("MM/dd/yyyy");
-        newActivity.subcategory = subcategorySelection.GetSelectedSubcategory();
-        newActivity.timeCost = dataInput.GetTimeCost();
-        newActivity.description = dataInput.GetDescription();
-        jsonHandler.SaveData(newActivity);
-    }
-    
-}
-
-//don't inherit from mono if not necessary
-public class JsonDataHandler
-{
-    private string filePathJson;
-    
-    public void SaveData(ActivityData activity)
-    {
-        if (string.IsNullOrEmpty(filePathJson) || !File.Exists(filePathJson)) return;
-
+        ActivityData newActivity = new ActivityData
+        {
+            date = DateTime.Now.ToString("MM/dd/yyyy"),
+            subcategory = subcategorySelection.GetSelectedSubcategory(),
+            timeCost = dataInput.GetTimeCost(),
+            description = dataInput.GetDescription()
+        };
+        // newActivity.date = DateTime.Now.ToString("MM/dd/yyyy");
+        // newActivity.subcategory = subcategorySelection.GetSelectedSubcategory();
+        // newActivity.timeCost = dataInput.GetTimeCost();
+        // newActivity.description = dataInput.GetDescription();
+        //jsonHandler.SaveData(newActivity);
+        
         ActivityDataList dataList = new ActivityDataList();
 
-        if (System.IO.File.Exists(filePathJson))
+        if (File.Exists(_jsonPath))
         {
-            string jsonData = System.IO.File.ReadAllText(filePathJson);
+            string jsonData = File.ReadAllText(_jsonPath);
             dataList = JsonUtility.FromJson<ActivityDataList>(jsonData);
         }
 
-        dataList.activities.Add(activity);
+        dataList.activities.Add(newActivity);
 
         string json = JsonUtility.ToJson(dataList, true);
-        System.IO.File.WriteAllText(filePathJson, json);
+        File.WriteAllText(_jsonPath, json);
     }
-
-    public JsonDataHandler(string path)
-    {
-        filePathJson = path;
-    }
+    
 }
+
+// public class JsonDataHandler
+// {
+//     private string filePathJson;
+//     
+//     public void SaveData(ActivityData activity)
+//     {
+//         if (string.IsNullOrEmpty(filePathJson) || !File.Exists(filePathJson)) return;
+//
+//         ActivityDataList dataList = new ActivityDataList();
+//
+//         if (System.IO.File.Exists(filePathJson))
+//         {
+//             string jsonData = System.IO.File.ReadAllText(filePathJson);
+//             dataList = JsonUtility.FromJson<ActivityDataList>(jsonData);
+//         }
+//
+//         dataList.activities.Add(activity);
+//
+//         string json = JsonUtility.ToJson(dataList, true);
+//         System.IO.File.WriteAllText(filePathJson, json);
+//     }
+//
+//     public JsonDataHandler(string path)
+//     {
+//         filePathJson = path;
+//     }
+// }
