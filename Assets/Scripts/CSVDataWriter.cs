@@ -9,17 +9,18 @@ public class CSVDataWriter : MonoBehaviour
 {
     public SubcategorySelection subcategorySelection;
     public DataInput dataInput;
-    private string filePath;
+    private string filePath1, filePath2;
     private void Start()
     {
-        filePath = Path.Combine(Application.persistentDataPath, "TimeRecord.csv");
+        filePath1 = Path.Combine(Application.persistentDataPath, "TimeRecord.csv");
+        filePath2 = Path.Combine(Application.persistentDataPath, "TimeRecordWithDesc.csv");
     }
 
     
 
-    public List<string[]> ReadCSV()
+    public List<string[]> ReadCSV(string csvPath)
     {
-        var lines = File.ReadAllLines(filePath);
+        var lines = File.ReadAllLines(csvPath);
         return lines.Select(line => line.Split(',')).ToList();
     }
 
@@ -36,21 +37,55 @@ public class CSVDataWriter : MonoBehaviour
     }
     public void UpdateOrAddData(string date, string category, float value)
     {
-        var data = ReadCSV();
+        var data = ReadCSV(filePath1);
+        var dataWithDesc = ReadCSV(filePath2);
         int rowIndex = FindRowByDate(data, date);
 
         // 如果找到日期，更新对应列的值
         if (rowIndex != -1)
         {
             UpdateRow(data, rowIndex, category, value);
+            UpdateDescRow(dataWithDesc, rowIndex, category, dataInput.GetDescription());
         }
         else
         {
             AddNewRow(data, date, category, value);
+            AddDescRow(dataWithDesc, date, category, dataInput.GetDescription());
         }
 
         // 将数据重新写回 CSV 文件
-        WriteCSV(data);
+        WriteCSV(data,filePath1);
+        WriteCSV(dataWithDesc,filePath2);
+    }
+    
+    private void UpdateDescRow(List<string[]> data, int rowIndex, string category, string desc)
+    {
+        int columnIndex = FindColumnIndexByCategory(category);  // Find the column index by category
+        if (columnIndex != -1)
+        {
+            if (!string.IsNullOrEmpty(data[rowIndex][columnIndex]))
+            {
+                data[rowIndex][columnIndex] = data[rowIndex][columnIndex] + "; " + desc;
+            }
+            else
+            {
+                data[rowIndex][columnIndex] = desc;
+            }
+        }
+    }
+    
+    private void AddDescRow(List<string[]> data, string date, string category, string desc)
+    {
+        var newRow = new string[data[0].Length];
+        newRow[0] = date;
+        int columnIndex = FindColumnIndexByCategory(category);
+
+        if (columnIndex != -1)
+        {
+            newRow[columnIndex] = desc;
+        }
+
+        data.Add(newRow);
     }
 
     private void UpdateRow(List<string[]> data, int rowIndex, string category, float value)
@@ -83,10 +118,11 @@ public class CSVDataWriter : MonoBehaviour
         data.Add(newRow);
     }
 
-    private void WriteCSV(List<string[]> data)
+    private void WriteCSV(List<string[]> data, string filePath)
     {
         var lines = data.Select(row => string.Join(",", row));
         File.WriteAllLines(filePath, lines);
+        
     }
     
     private int FindColumnIndexByCategory(string category)
