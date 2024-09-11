@@ -53,17 +53,26 @@ public class CSVDataWriter : MonoBehaviour
         var data = ReadCSV(filePath1);
         var dataWithDesc = ReadCSV(filePath2);
         int rowIndex = FindRowByDate(data, date);
+        int descRowIndex = FindRowByDate(dataWithDesc, date);
 
         // 如果找到日期，更新对应列的值
         if (rowIndex != -1)
         {
             UpdateRow(data, rowIndex, category, value);
-            //UpdateDescRow(dataWithDesc, rowIndex, category, dataInput.GetDescription());  todo 这里总是报数组越界
         }
         else
         {
             AddNewRow(data, date, category, value);
-            //AddDescRow(dataWithDesc, date, category, dataInput.GetDescription());
+            
+        }
+
+        if (descRowIndex >= 0)
+        {
+            UpdateDescRow(dataWithDesc, descRowIndex, category, dataInput.GetDescription());  
+        }
+        else
+        {
+            AddDescRow(dataWithDesc, date, category, dataInput.GetDescription());
         }
 
         // 将数据重新写回 CSV 文件
@@ -76,23 +85,22 @@ public class CSVDataWriter : MonoBehaviour
         int columnIndex = FindColumnIndexByCategory(category);  // Find the column index by category
         if (columnIndex != -1)
         {
-            //这里col row搞反了
-            // if (!string.IsNullOrEmpty(data[rowIndex][columnIndex]))
-            // {
-            //     data[rowIndex][columnIndex] = data[rowIndex][columnIndex] + "; " + desc;
-            // }
-            // else
-            // {
-            //     data[rowIndex][columnIndex] = desc;
-            // }
-            if (!string.IsNullOrEmpty(data[columnIndex][rowIndex]))
+            if (!string.IsNullOrEmpty(data[rowIndex][columnIndex]))
             {
-                data[columnIndex][rowIndex] = data[columnIndex][rowIndex] + "; " + desc;
+                data[rowIndex][columnIndex] = data[rowIndex][columnIndex] + "; " + desc;
             }
             else
             {
-                data[columnIndex][rowIndex] = desc;
+                data[rowIndex][columnIndex] = desc;
             }
+            // if (!string.IsNullOrEmpty(data[columnIndex][rowIndex]))
+            // {
+            //     data[columnIndex][rowIndex] = data[columnIndex][rowIndex] + "; " + desc;
+            // }
+            // else
+            // {
+            //     data[columnIndex][rowIndex] = desc;
+            // }
         }
     }
     
